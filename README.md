@@ -1,4 +1,4 @@
-# Create an HTML piece of code from bib files with Python
+# Create an HTML page from bib files with Python
 
 The script loads publications from the bib file *papers.bib*. In addition, the bib file  *meta-papers.bib* includes a short description and addititional links for source code, dataset, video and etc.. The entries on both files should have the same id. Finally, image thumbnails should be provided for each publication. The thumbnails should have the name of the id file and be stored in the *imgs* folder.
 
