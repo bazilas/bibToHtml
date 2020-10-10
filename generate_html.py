@@ -48,8 +48,8 @@ with doc:
                                 if field_name in current_dict and current_dict[field_name]:
                                     return True
                             
-                            list_of_links = ['preprint', 'publication', 'project', 'code', 'data', 'video']
-                            list_of_labels = ['Pre-print', 'Publication', 'Project', 'Code', 'Data', 'Video'] 
+                            list_of_links = ['preprint', 'publication', 'project', 'code', 'data', 'video', 'bib']
+                            list_of_labels = ['Pre-print', 'Publication', 'Project', 'Code', 'Data', 'Video', 'Bib File'] 
 
                             for li, la in zip(list_of_links,list_of_labels):
                                 if check_field(li, meta_data):
