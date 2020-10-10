@@ -1,7 +1,6 @@
 import dominate
 from dominate.tags import *
 import bibtexparser
-import os
 
 # Load the bib file with the papers
 with open('papers.bib') as bibtex_file:
