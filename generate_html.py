@@ -1,6 +1,7 @@
 import dominate
 from dominate.tags import *
 import bibtexparser
+import os
 
 # Load the bib file with the papers
 with open('papers.bib') as bibtex_file:
@@ -9,6 +10,12 @@ with open('papers.bib') as bibtex_file:
 # Load the meta-data bib file with description, project page and etc.
 with open('meta-papers.bib') as bibtex_file:
     meta_papers = bibtexparser.load(bibtex_file)
+
+# image source (local / webfolder, should exist prior to execution) - image files are jpg
+img_root = 'imgs/'
+
+# bib file export folder (should exist prior to execution)
+bib_export_fld = 'bib_files/'
 
 doc = dominate.document(title='Papers')
 
@@ -33,8 +40,12 @@ with doc:
                         with td(style="width: 165px; height: 15px;"):
 
                             # Path for the thumbnail image (stored as jpg). The thumbnail name should be the bib entry id.
-                            img_path = 'imgs/' + bib['ID'] + '.jpg'
+                            # use lexis.jpg if there is not available thumbnail
+                            img_path = img_root + bib['ID'] + '.jpg'
+                            if not os.path.exists(img_path):
+                                img_path = img_root + 'lexis.jpg'
                             div(img(src=img_path, width="160", height="160", style="display: block; margin-left: auto; margin-right: auto;"), _class='photo')
+
                         with td(style="width: 390; height: 15px;"):
                             # Authors, Title, Conference / Journal, Year
                             p('%s, %s, %s, %s' % (bib['author'], bib['title'], bib['booktitle'], bib['year']))
@@ -49,11 +60,24 @@ with doc:
                                     return True
                             
                             list_of_links = ['preprint', 'publication', 'project', 'code', 'data', 'video', 'bib']
-                            list_of_labels = ['Pre-print', 'Publication', 'Project', 'Code', 'Data', 'Video', 'Bib File'] 
+                            list_of_labels = ['Pre-print', 'Publication', 'Project', 'Code', 'Data', 'Video'] 
 
                             for li, la in zip(list_of_links,list_of_labels):
                                 if check_field(li, meta_data):
                                     a(la, href=meta_data[li], target="_blank", rel="noopener")
+
+                            # export invdividual bib files
+                            bib_export = bibtexparser.bwriter.BibTexWriter()
+                            bib_path = bib_export_fld + bib['ID'] + '.bib'
+
+                            with open(bib_path, 'w') as bibfile:
+                                db = bibtexparser.bibdatabase .BibDatabase()
+                                db.entries = [bib]
+                                bibtexparser.dumps(db)
+                                bibfile.write(bib_export.write(db))
+
+                            #add link to the webpage
+                            a('Bib File', href=bib_path, target="_blank", rel="noopener")
 
 with open('papers.html', 'wb') as file:
         file.write(doc.render(pretty=True).encode())
