@@ -46,9 +46,12 @@ with doc:
                                 img_path = img_root + 'lexis.jpg'
                             div(img(src=img_path, width="160", height="160", style="display: block; margin-left: auto; margin-right: auto;"), _class='photo')
 
-                        with td(style="width: 390; height: 15px;"):
+                        with td(style="width: 390px; height: 15px;"):
                             # Authors, Title, Conference / Journal, Year
-                            p('%s, %s, %s, %s' % (bib['author'], bib['title'], bib['booktitle'], bib['year']))
+                            if "booktitle" in bib:
+                                p('%s, <b>%s</b>, %s, %s.' % (bib['author'].replace(' and', ','), bib['title'], bib['booktitle'].replace('\&', '&'), bib['year']))
+                            else:
+                                p('%s, <b>%s</b>, %s, %s.' % (bib['author'].replace(' and', ','), bib['title'], bib['journal'].replace('\&', '&'), bib['year']))
                             
                             # Short Description
                             if 'note' in meta_data and meta_data['note']:
@@ -80,4 +83,4 @@ with doc:
                             a('Bib File', href=bib_path, target="_blank", rel="noopener")
 
 with open('papers.html', 'wb') as file:
-        file.write(doc.render(pretty=True).encode())
+        file.write(doc.render(pretty=True).replace('&lt;b&gt;', '<b>').replace('&lt;/b&gt;', '</b>').encode())
